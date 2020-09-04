@@ -26,7 +26,7 @@ class FormsState extends State<Forms>{
   String initVal_3 = "ካማሽ";
   String initVal2 = "አሶሳ ዞን";
   var s;
-  var loadStatus = false;
+  var loadStatus = 0;
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController weredaController = TextEditingController();
@@ -64,13 +64,37 @@ class FormsState extends State<Forms>{
 
   _initialSymptomValues(){
     for(int i=0; i<=2; i++){
-      values_1.add(false);
+      setState(() {
+        values_1.add(false);
+      });
     }
     for(int i=0; i<=6; i++){
-      values_2.add(false);
+      setState(() {
+        values_2.add(false);
+      });
     }
     for(int i=0; i<=2; i++){
-      values_3.add(false);
+      setState(() {
+        values_3.add(false);
+      });
+    }
+  }
+
+  _resetSymptomValues(){
+    for(int i=0; i<=2; i++){
+      setState(() {
+        values_1[i] = false;
+      });
+    }
+    for(int i=0; i<=6; i++){
+      setState(() {
+        values_2[i] = false;
+      });
+    }
+    for(int i=0; i<=2; i++){
+      setState(() {
+        values_3[i] = false;
+      });
     }
   }
 
@@ -84,7 +108,7 @@ class FormsState extends State<Forms>{
 
   Future _handleSubmit() async{
     setState(() {
-      loadStatus = true;
+      loadStatus = 1;
     });
     String name = nameController.text.toString();
     String wereda;
@@ -134,41 +158,53 @@ class FormsState extends State<Forms>{
       "seriousSymptoms": seriousSymptoms,
       "additionalInfo": additional
     };
-
-    var response = await http.post('https://beni-tena.herokuapp.com/answer',
-        body: json.encode(info), headers: {"Content-type": "application/json"}
-    );
-    setState(() {
-      loadStatus = false;
-    });
-
-    if(response.statusCode == 200){
-      final snackBar = SnackBar(
-        content: Text(getTranslated(context, 'sent'), style: TextStyle(fontWeight: FontWeight.bold),)
+    try{
+      var response = await http.post('https://beni-tena.herokuapp.com/answer',
+          body: json.encode(info), headers: {"Content-type": "application/json"}
       );
-      nameController.clear();
-      weredaController.clear();
-      kebeleController.clear();
-      phoneController.clear();
-      additionalController.clear();
-      _initialSymptomValues();
+      setState(() {
+        loadStatus = 0;
+      });
 
-      Scaffold.of(context).showSnackBar(snackBar);
-    }else if(response.statusCode != 200){
-      final snackBar = SnackBar(
-          content: Text('Error please try again', style: TextStyle(fontWeight: FontWeight.bold),)
-      );
-      Scaffold.of(context).showSnackBar(snackBar);
+      if(response.statusCode == 200){
+        final snackBar = SnackBar(
+            content: Text(getTranslated(context, 'sent'), style: TextStyle(fontWeight: FontWeight.bold),)
+        );
+        nameController.clear();
+        weredaController.clear();
+        kebeleController.clear();
+        phoneController.clear();
+        additionalController.clear();
+        _resetSymptomValues();
+
+        Scaffold.of(context).showSnackBar(snackBar);
+      }else if(response.statusCode != 200){
+        final snackBar = SnackBar(
+            content: Text('Error please try again', style: TextStyle(fontWeight: FontWeight.bold),)
+        );
+        Scaffold.of(context).showSnackBar(snackBar);
+      }
+    }catch(err){
+      setState(() {
+        loadStatus = 2;
+      });
     }
+
   }
 
   // ignore: missing_return
   Widget build(context){
 
-    if(loadStatus == false){
+    if(loadStatus == 0){
       return buildMainWidget();
-    }else if(loadStatus == true){
+    }else if(loadStatus == 1){
       return buildProgressBar();
+    }
+    Orientation orientation = MediaQuery.of(context).orientation;
+    if(orientation == Orientation.portrait){
+    return _buildErrorPage();
+    }else if(orientation == Orientation.landscape){
+      return _buildErrorPageLandScape();
     }
   }
 
@@ -230,9 +266,7 @@ class FormsState extends State<Forms>{
     return Form(
       key: _formKey,
       child: Column(
-//      mainAxisAlignment: MainAxisAlignment.s,
         children: <Widget>[
-//          buildSelectLang(),
 
           buildMainTitle1(constraints),
 
@@ -245,7 +279,6 @@ class FormsState extends State<Forms>{
             children: <Widget>[
               buildAgeFieldButton(constraints),
               SizedBox(width: constraints.maxWidth*0.04,),
-//            buildGenderTitle(constraints),
               Expanded(
                 flex: 2,
                 child: buildSexFieldMale(),
@@ -259,21 +292,33 @@ class FormsState extends State<Forms>{
             ],
           ),
           SizedBox(height: constraints.maxHeight*0.05,),
-          buildKebeleField(),
-          SizedBox(height: constraints.maxHeight*0.05,),
           Row(
             children: <Widget>[
-              Expanded(
-                child: _buildWeredaDropDown(),
-              ),
+              // Expanded(
+                 _buildZoneLabel(),
+              // ),
               SizedBox(
                 width: constraints.maxWidth*0.05,
               ),
               Expanded(
                 child: _buildZoneField(),
+              ),
+              SizedBox(
+                width: constraints.maxWidth*0.05,
+              ),
+              _buildWeredaLabel(),
+              SizedBox(
+                width: constraints.maxWidth*0.05,
+              ),
+              Expanded(
+                child: _buildWeredaDropDown(),
               )
             ],
           ),
+
+          SizedBox(height: constraints.maxHeight*0.05,),
+
+          buildKebeleField(),
 
           SizedBox(height: constraints.maxHeight*0.05,),
 
@@ -374,6 +419,14 @@ class FormsState extends State<Forms>{
     return Text(getTranslated(context, 'female'));
   }
 
+  Widget _buildZoneLabel(){
+    return Text(getTranslated(context, 'zone'));
+  }
+
+  Widget _buildWeredaLabel(){
+    return Text(getTranslated(context, 'wereda'));
+  }
+
   Widget buildNameField(){
     return TextFormField(
       controller: nameController,
@@ -382,6 +435,10 @@ class FormsState extends State<Forms>{
       ),
       validator: (value){
         if(value.isEmpty){
+          final snackBar = SnackBar(
+              content: Text(getTranslated(context, 'warn3'), style: TextStyle(fontWeight: FontWeight.bold),)
+          );
+          Scaffold.of(context).showSnackBar(snackBar);
           return getTranslated(context, 'warn');
         }
         return null;
@@ -475,6 +532,10 @@ class FormsState extends State<Forms>{
       ),
       validator: (value){
         if(value.isEmpty){
+          final snackBar = SnackBar(
+              content: Text(getTranslated(context, 'warn3'), style: TextStyle(fontWeight: FontWeight.bold),)
+          );
+          Scaffold.of(context).showSnackBar(snackBar);
           return  getTranslated(context, 'warn');
         }
         return null;
@@ -491,6 +552,10 @@ class FormsState extends State<Forms>{
       ),
       validator: (value){
         if(value.isEmpty){
+          final snackBar = SnackBar(
+              content: Text(getTranslated(context, 'warn3'), style: TextStyle(fontWeight: FontWeight.bold),)
+          );
+          Scaffold.of(context).showSnackBar(snackBar);
           return  getTranslated(context, 'warn');
         }
           final Pattern _pattern = r'(^(\+251)+|^0)[9][0-9]{8}\b';
@@ -498,6 +563,10 @@ class FormsState extends State<Forms>{
           if(regExp.hasMatch(value)){
             return null;
           }else{
+            final snackBar = SnackBar(
+                content: Text(getTranslated(context, 'warn2'), style: TextStyle(fontWeight: FontWeight.bold),)
+            );
+            Scaffold.of(context).showSnackBar(snackBar);
             return getTranslated(context, 'warn2');
           }
       },
@@ -731,4 +800,150 @@ class FormsState extends State<Forms>{
       child: Text(getTranslated(context, 'submit'), style: TextStyle(color: Colors.white, fontSize: 17),),
     );
   }
+
+  Widget _buildErrorPage(){
+    return Container(
+        height: SizeConfig.blockSizeVertical*100,
+        width: SizeConfig.blockSizeHorizontal*100,
+        child: LayoutBuilder(
+          builder: (context, constraints){
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  SizedBox(height: constraints.maxHeight*0.2,),
+                  Container(
+                      height: constraints.maxHeight*0.3,
+                      width: constraints.maxWidth*0.5,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/image/404err.png'),
+                              fit: BoxFit.contain
+                          )
+                      )
+                  ),
+                  Container(
+                    child: Align(
+                      child: Text(getTranslated(context, 'err'), style: TextStyle(fontSize: constraints.maxHeight*0.04),),
+                    ),
+                  ),
+                  SizedBox(height: constraints.maxHeight*0.1,),
+                  Container(
+                      height: constraints.maxHeight*0.35,
+                      width: constraints.maxWidth,
+                      child: LayoutBuilder(
+                          builder: (context, constraints){
+                            return Align(
+                              alignment: Alignment.topCenter,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  MaterialButton(
+                                    child: Text(getTranslated(context, 'refresh'), style: TextStyle(color: AppTheme.navIcon),),
+                                    height: constraints.maxHeight*0.2,
+                                    color: AppTheme.appColor,
+                                    onPressed: (){
+                                      // setState(() {
+                                        // loadStatus = 0;
+                                        _handleSubmit();
+                                      // });
+                                    },
+                                  ),
+                                  SizedBox(width: constraints.maxWidth*0.1,),
+                                  MaterialButton(
+                                    child: Text(getTranslated(context, 'cancel'), style: TextStyle(color: AppTheme.navIcon),),
+                                    height: constraints.maxHeight*0.2,
+                                    color: AppTheme.appColor,
+                                    onPressed: (){
+                                      setState(() {
+                                        loadStatus = 0;
+                                        // _handleSubmit();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ) ;
+                          }
+                      )
+                  )
+                ]
+            );
+          },
+        )
+    );
+  }
+
+  Widget _buildErrorPageLandScape(){
+    return Container(
+        height: SizeConfig.blockSizeHorizontal*100,
+        width: SizeConfig.blockSizeVertical*100,
+        child: LayoutBuilder(
+          builder: (context, constraints){
+            return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:[
+                  SizedBox(height: constraints.maxHeight*0.2,),
+                  Container(
+                      height: constraints.maxHeight*0.2,
+                      width: constraints.maxWidth*0.5,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage('assets/image/404err.png'),
+                              fit: BoxFit.scaleDown
+                          )
+                      )
+                  ),
+                  SizedBox(height: constraints.maxHeight*0.1,),
+                  Container(
+                    child: Align(
+                      child: Text(getTranslated(context, 'err'), style: TextStyle(fontSize: constraints.maxHeight*0.06),),
+                    ),
+                  ),
+                  SizedBox(height: constraints.maxHeight*0.1,),
+                  Container(
+                      height: constraints.maxHeight*0.3,
+                      width: constraints.maxWidth,
+                      child: LayoutBuilder(
+                          builder: (context, constraints){
+                            return Align(
+                              alignment: Alignment.topCenter,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  MaterialButton(
+                                    child: Text(getTranslated(context, 'refresh'), style: TextStyle(color: AppTheme.navIcon),),
+                                    height: constraints.maxHeight*0.35,
+                                    color: AppTheme.appColor,
+                                    onPressed: (){
+                                      // setState(() {
+                                        // loadStatus = 0;
+                                        _handleSubmit();
+                                      // });
+                                    },
+                                  ),
+                                  SizedBox(width: constraints.maxWidth*0.05,),
+                                  MaterialButton(
+                                    child: Text(getTranslated(context, 'cancel'), style: TextStyle(color: AppTheme.navIcon),),
+                                    height: constraints.maxHeight*0.35,
+                                    color: AppTheme.appColor,
+                                    onPressed: (){
+                                      setState(() {
+                                        loadStatus = 0;
+                                        // _handleSubmit();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ) ;
+                          }
+                      )
+                  )
+                ]
+            );
+          },
+        )
+    );
+  }
+
 }

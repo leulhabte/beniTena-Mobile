@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../fetch/get_api_data.dart';
 import '../config/size_config.dart';
 import '../config/styling.dart';
+import 'package:intl/intl.dart';
 
 
 class More extends StatefulWidget{
@@ -21,6 +22,14 @@ class MoreState extends State<More>{
     _initConnValues();
   }
 
+  var confirmed = '0';
+  var recovered = '0';
+  var death = '0';
+
+  var confirmedLocal = '0';
+  var recoveredLocal = '0';
+  var deathLocal = '0';
+
   _initConnValues(){
     setState(() {
       flagState = 0;
@@ -33,6 +42,12 @@ class MoreState extends State<More>{
       }).then((value){
         if(checkUp == 2){
           setState(() {
+            confirmed = NumberFormat.compact().format(globalData['confirmed']);
+            recovered = NumberFormat.compact().format(globalData['recovered']);
+            death = NumberFormat.compact().format(globalData['deaths']);
+            confirmedLocal = NumberFormat.compact().format(countryData['confirmed']);
+            recoveredLocal = NumberFormat.compact().format(countryData['recovered']);
+            deathLocal = NumberFormat.compact().format(countryData['deaths']);
             checkUp = 0;
             flagState = 1;
           });
@@ -90,13 +105,13 @@ class MoreState extends State<More>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: constraints.maxHeight*0.07),
-                _buildTitle1(),
+                _buildTitle1LandScape(constraints),
                 SizedBox(height: constraints.maxHeight*0.05),
-                _buildGlobal(),
+                _buildGlobalLandScape(constraints),
                 SizedBox(height: constraints.maxHeight*0.05),
-                _buildTitle2(),
+                _buildTitle2LandScape(constraints),
                 SizedBox(height: constraints.maxHeight*0.05),
-                _buildCountry(),
+                _buildCountryLandScape(constraints),
                 SizedBox(height: constraints.maxHeight*0.05),
                 _buildRefreshButton(constraints),
                 SizedBox(height: constraints.maxHeight*0.05)
@@ -142,7 +157,7 @@ class MoreState extends State<More>{
               _buildRefreshButton(constraints),
               SizedBox(width: constraints.maxWidth*0.03),
               Text(getTranslated(context, 'current'), style: TextStyle(fontWeight: FontWeight.bold,
-                  fontSize: 20, color: AppTheme.navIcon))
+                  fontSize: constraints.maxHeight*0.04, color: AppTheme.navIcon))
             ],
           )
         ),
@@ -164,13 +179,13 @@ class MoreState extends State<More>{
             child: Column(
               children: [
                 SizedBox(height: constraints.maxHeight*0.03,),
-                _buildTitle1(),
+                _buildTitle1(constraints),
                 SizedBox(height: constraints.maxHeight*0.03,),
-                _buildGlobal(),
+                _buildGlobal(constraints),
                 SizedBox(height: constraints.maxHeight*0.03,),
-                _buildTitle2(),
+                _buildTitle2(constraints),
                 SizedBox(height: constraints.maxHeight*0.03,),
-                _buildCountry(),
+                _buildCountry(constraints),
                 SizedBox(height: constraints.maxHeight*0.03,),
                 // _buildRefreshButton(constraints)
               ],
@@ -181,49 +196,97 @@ class MoreState extends State<More>{
     );
   }
 
-  Widget _buildTitle1(){
+  Widget _buildTitle1(BoxConstraints constraints){
     return Text(getTranslated(context, 'total'), style: TextStyle(fontWeight: FontWeight.bold,
-    fontSize: 20),);
+    fontSize:  constraints.maxHeight*0.04),);
   }
 
-  Widget _buildTitle2(){
+  Widget _buildTitle2(BoxConstraints constraints){
     return Text(getTranslated(context, 'covidEth'), style: TextStyle(fontWeight: FontWeight.bold,
-    fontSize: 20),);
+    fontSize:  constraints.maxHeight*0.04),);
   }
 
-  Widget _buildGlobal(){
+  Widget _buildGlobal(BoxConstraints constraints){
     return Column(
       children: [
         ListTile(
-          leading: Text(getTranslated(context, 'confirmed'), style: TextStyle(fontSize: 17),),
-          trailing: Text('${globalData['confirmed']}', style: TextStyle(fontSize: 17)),
+          leading: Text(getTranslated(context, 'confirmed'), style: TextStyle(fontSize: constraints.maxHeight*0.035),),
+          trailing: Text('$confirmed', style: TextStyle(fontSize: constraints.maxHeight*0.035)),
         ),
         ListTile(
-          leading: Text(getTranslated(context, 'recovered'), style: TextStyle(fontSize: 17)),
-          trailing: Text('${globalData['recovered']}', style: TextStyle(fontSize: 17)),
+          leading: Text(getTranslated(context, 'recovered'), style: TextStyle(fontSize: constraints.maxHeight*0.035)),
+          trailing: Text('$recovered', style: TextStyle(fontSize: constraints.maxHeight*0.035)),
         ),
         ListTile(
-          leading: Text(getTranslated(context, 'death'), style: TextStyle(fontSize: 17)),
-          trailing: Text('${globalData['deaths']}', style: TextStyle(fontSize: 17)),
+          leading: Text(getTranslated(context, 'death'), style: TextStyle(fontSize: constraints.maxHeight*0.035)),
+          trailing: Text('$death', style: TextStyle(fontSize: constraints.maxHeight*0.035)),
         ),
       ],
     );
   }
 
-  Widget _buildCountry(){
+  Widget _buildCountry(BoxConstraints constraints){
     return Column(
       children: [
         ListTile(
-          leading: Text(getTranslated(context, 'confirmed'), style: TextStyle(fontSize: 17),),
-          trailing: Text('${countryData['confirmed']}', style: TextStyle(fontSize: 17)),
+          leading: Text(getTranslated(context, 'confirmed'), style: TextStyle(fontSize: constraints.maxHeight*0.035),),
+          trailing: Text('$confirmedLocal', style: TextStyle(fontSize: constraints.maxHeight*0.035)),
         ),
         ListTile(
-          leading: Text(getTranslated(context, 'recovered'), style: TextStyle(fontSize: 17)),
-          trailing: Text('${countryData['recovered']}', style: TextStyle(fontSize: 17)),
+          leading: Text(getTranslated(context, 'recovered'), style: TextStyle(fontSize: constraints.maxHeight*0.035)),
+          trailing: Text('$recoveredLocal', style: TextStyle(fontSize: constraints.maxHeight*0.035)),
         ),
         ListTile(
-          leading: Text(getTranslated(context, 'death'), style: TextStyle(fontSize: 17)),
-          trailing: Text('${countryData['deaths']}', style: TextStyle(fontSize: 17)),
+          leading: Text(getTranslated(context, 'death'), style: TextStyle(fontSize: constraints.maxHeight*0.035)),
+          trailing: Text('$deathLocal', style: TextStyle(fontSize: constraints.maxHeight*0.035)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTitle1LandScape(BoxConstraints constraints){
+    return Text(getTranslated(context, 'total'), style: TextStyle(fontWeight: FontWeight.bold,
+        fontSize:  constraints.maxHeight*0.1),);
+  }
+
+  Widget _buildTitle2LandScape(BoxConstraints constraints){
+    return Text(getTranslated(context, 'covidEth'), style: TextStyle(fontWeight: FontWeight.bold,
+        fontSize:  constraints.maxHeight*0.1),);
+  }
+
+  Widget _buildGlobalLandScape(BoxConstraints constraints){
+    return Column(
+      children: [
+        ListTile(
+          leading: Text(getTranslated(context, 'confirmed'), style: TextStyle(fontSize: constraints.maxHeight*0.065),),
+          trailing: Text('$confirmed', style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+        ),
+        ListTile(
+          leading: Text(getTranslated(context, 'recovered'), style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+          trailing: Text('$recovered', style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+        ),
+        ListTile(
+          leading: Text(getTranslated(context, 'death'), style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+          trailing: Text('$death', style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCountryLandScape(BoxConstraints constraints){
+    return Column(
+      children: [
+        ListTile(
+          leading: Text(getTranslated(context, 'confirmed'), style: TextStyle(fontSize: constraints.maxHeight*0.065),),
+          trailing: Text('$confirmedLocal', style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+        ),
+        ListTile(
+          leading: Text(getTranslated(context, 'recovered'), style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+          trailing: Text('$recoveredLocal', style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+        ),
+        ListTile(
+          leading: Text(getTranslated(context, 'death'), style: TextStyle(fontSize: constraints.maxHeight*0.065)),
+          trailing: Text('$deathLocal', style: TextStyle(fontSize: constraints.maxHeight*0.065)),
         ),
       ],
     );
@@ -249,16 +312,21 @@ class MoreState extends State<More>{
             return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:[
-                  SizedBox(height: constraints.maxHeight*0.2,),
+                  SizedBox(height: constraints.maxHeight*0.1,),
                   Container(
                       height: constraints.maxHeight*0.3,
                       width: constraints.maxWidth*0.5,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/image/404err.jpg'),
-                              fit: BoxFit.scaleDown
+                              image: AssetImage('assets/image/404err.png'),
+                              fit: BoxFit.contain
                           )
                       )
+                  ),
+                  Container(
+                    child: Align(
+                      child: Text(getTranslated(context, 'err'), style: TextStyle(fontSize: constraints.maxHeight*0.04),),
+                    ),
                   ),
                   SizedBox(height: constraints.maxHeight*0.1,),
                   Container(
@@ -301,18 +369,24 @@ class MoreState extends State<More>{
                 children:[
                   SizedBox(height: constraints.maxHeight*0.2,),
                   Container(
-                      height: constraints.maxHeight*0.3,
+                      height: constraints.maxHeight*0.2,
                       width: constraints.maxWidth*0.5,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/image/404err.jpg'),
+                              image: AssetImage('assets/image/404err.png'),
                               fit: BoxFit.scaleDown
                           )
                       )
                   ),
                   SizedBox(height: constraints.maxHeight*0.1,),
                   Container(
-                      height: constraints.maxHeight*0.35,
+                    child: Align(
+                      child: Text(getTranslated(context, 'err'), style: TextStyle(fontSize: constraints.maxHeight*0.06),),
+                    ),
+                  ),
+                  SizedBox(height: constraints.maxHeight*0.1,),
+                  Container(
+                      height: constraints.maxHeight*0.3,
                       width: constraints.maxWidth,
                       child: LayoutBuilder(
                           builder: (context, constraints){
@@ -320,7 +394,7 @@ class MoreState extends State<More>{
                               alignment: Alignment.topCenter,
                               child: MaterialButton(
                                 child: Text(getTranslated(context, 'refresh'), style: TextStyle(color: AppTheme.navIcon),),
-                                height: constraints.maxHeight*0.4,
+                                height: constraints.maxHeight*0.35,
                                 color: AppTheme.appColor,
                                 onPressed: (){
                                   setState(() {

@@ -36,7 +36,8 @@
   "viewBasic2": "View Basic Covid-19 Prevention Methods",
   "more2": "Additional Info of corona virus",
   "warn": "required field",
-  "warn2": "enter a correct phone number",
+  "warn2": "Enter a correct phone number",
+  "warn3": "Fill the required field",
   "submit" : "Submit Data",
   "help": "Help",
   "add": "Add",
@@ -63,5 +64,8 @@
   "refresh": "Refresh Page",
   "covidEth": "Covid-19 cases in Ethiopia",
   "current": "Covid-19 Current Information",
-  "app": "Beni-Tena"
+  "app": "Beni-Tena",
+  "cancel": "Cancel",
+  "err": "Connection error",
+  "zone": "Zone"
 }

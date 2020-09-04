@@ -131,9 +131,9 @@ class HomeState extends State<Home>{
           hasInk: true,//new, gives a cute ink effect
           inkColor: Colors.black12 ,//optional, uses theme color if not specified
           items: <BubbleBottomBarItem>[
-            BubbleBottomBarItem(backgroundColor: AppTheme.appColor2, icon: Icon(Icons.add, color: Colors.black,), activeIcon: Icon(Icons.dashboard, color: AppTheme.appColor,), title: Text(getTranslated(context, 'add'))),
-            BubbleBottomBarItem(backgroundColor: AppTheme.appColor, icon: Icon(Icons.help, color: Colors.black,), activeIcon: Icon(Icons.info_outline, color: Colors.deepPurple,), title: Text(getTranslated(context, 'prev'))),
-            BubbleBottomBarItem(backgroundColor: AppTheme.appColor, icon: Icon(Icons.more, color: Colors.black,), activeIcon: Icon(Icons.cloud, color: Colors.deepPurple,), title: Text(getTranslated(context, 'moreTab')))
+            BubbleBottomBarItem(backgroundColor: AppTheme.appColor2, icon: Icon(Icons.add, color: Colors.deepPurple,), activeIcon: Icon(Icons.dashboard, color: Colors.indigo,), title: Text(getTranslated(context, 'add'))),
+            BubbleBottomBarItem(backgroundColor: AppTheme.appColor, icon: Icon(Icons.help, color: Colors.deepPurple,), activeIcon: Icon(Icons.info_outline, color: Colors.indigo,), title: Text(getTranslated(context, 'prev'))),
+            BubbleBottomBarItem(backgroundColor: AppTheme.appColor, icon: Icon(Icons.more, color: Colors.deepPurple,), activeIcon: Icon(Icons.cloud, color: Colors.indigo,), title: Text(getTranslated(context, 'moreTab')))
           ],
     ),
       body: _children[_currentIndex],

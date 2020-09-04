@@ -34,6 +34,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   shared_preferences: ^0.5.10
+  intl: ^0.16.1
+  flutter_dotenv: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +62,7 @@ flutter:
     - assets/image/
     - lib/src/lang/en.json
     - lib/src/lang/am.json
+    - .env
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
