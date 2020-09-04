@@ -42,7 +42,7 @@ class HomeState extends State<Home>{
   Widget build(context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('Beni-Tena'),
+        title: Text(getTranslated(context, 'app')),
         backgroundColor: AppTheme.appColor,
         actions: [
           Padding(

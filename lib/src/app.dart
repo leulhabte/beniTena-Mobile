@@ -43,8 +43,8 @@ class _AppState extends State<App> {
               home: Splash(),
               locale: _locale,
               supportedLocales: [
-                Locale('en', 'US'),
-                Locale('am', 'ETH')
+                Locale('am', 'ETH'),
+                Locale('en', 'US')
               ],
               localizationsDelegates: [
                 DemoLocalization.delegate,

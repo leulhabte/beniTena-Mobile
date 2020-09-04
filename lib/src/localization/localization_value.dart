@@ -26,7 +26,7 @@ Locale _locale(String lang){
     case AMHARIC:
       _temp = Locale(lang, 'ETH');
       break;
-    default: _temp = Locale(ENGLISH, 'US');
+    default: _temp = Locale(AMHARIC, 'ETH');
   }
 
   return _temp;
@@ -34,6 +34,6 @@ Locale _locale(String lang){
 
 Future<Locale> getLocale() async{
   SharedPreferences _pref = await SharedPreferences.getInstance();
-  String languageCode = _pref.getString(LANGUAGE_CODE) ?? ENGLISH;
+  String languageCode = _pref.getString(LANGUAGE_CODE) ?? AMHARIC;
   return _locale(languageCode);
 }

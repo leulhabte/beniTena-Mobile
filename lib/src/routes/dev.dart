@@ -24,7 +24,7 @@ class DevInfo extends StatelessWidget{
                 leading: Icon(Icons.account_circle, color: AppTheme.appBackGround,size: 30,),
                 title: Text('${getTranslated(context, 'dev2')}',
                     style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
-                subtitle: Text('mehiretabteshome@gmail.com',
+                subtitle: Text('mehiretab333@gmail.com',
                     style: TextStyle(fontSize: 19, fontWeight: FontWeight.normal)),
                 trailing: Icon(Icons.android,color: AppTheme.appColor,size: 20,),
               ),

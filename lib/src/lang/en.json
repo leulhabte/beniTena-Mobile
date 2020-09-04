@@ -22,7 +22,7 @@
   "conj": "Conjunctivitis",
   "head": "Headache",
   "loss": "Loss of Test and Smell",
-  "rash": "Rash on skin, discolouration of fingers and toes",
+  "rash": "Rash on skin and discolouration of fingers",
   "serious": "Serious symptoms",
   "difficult": "Difficult Breathing",
   "chest": "Chest pain",
@@ -55,5 +55,13 @@
   "dev2": "Mehiretab Teshome",
   "dev3": "Mebratu Kumera",
   "dev4": "Tsehay Birhanu",
-  "dev": "Developers"
+  "dev": "Developers",
+  "total": "Total Confirmed Cases World Wide",
+  "confirmed": "Confirmed",
+  "recovered": "Recovered",
+  "death": "Death",
+  "refresh": "Refresh Page",
+  "covidEth": "Covid-19 cases in Ethiopia",
+  "current": "Covid-19 Current Information",
+  "app": "Beni-Tena"
 }

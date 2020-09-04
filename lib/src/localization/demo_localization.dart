@@ -31,7 +31,7 @@ class _DemoLocalizationDelegate extends LocalizationsDelegate<DemoLocalization>{
   const _DemoLocalizationDelegate();
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'am'].contains(locale.languageCode);
+    return ['am', 'en'].contains(locale.languageCode);
   }
 
   @override

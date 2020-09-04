@@ -88,7 +88,8 @@ class FormsState extends State<Forms>{
     });
     String name = nameController.text.toString();
     String wereda;
-    String kebele = initVal2;
+    String zone = initVal2;
+    String kebele = kebeleController.text.toString();
     String phone = phoneController.text.toString();
     int age = _initialValue;
     String sex = gender;
@@ -126,6 +127,7 @@ class FormsState extends State<Forms>{
       "gender": sex,
       "wereda": wereda,
       "kebele": kebele,
+      "zone": zone,
       "phoneNumber": phone,
       "mostCommonSymptoms": csm,
       "lessCommonSymptoms": lessSymptoms,
@@ -256,7 +258,9 @@ class FormsState extends State<Forms>{
               buildFemaleTitle(),
             ],
           ),
-        SizedBox(height: constraints.maxHeight*0.05,),
+          SizedBox(height: constraints.maxHeight*0.05,),
+          buildKebeleField(),
+          SizedBox(height: constraints.maxHeight*0.05,),
           Row(
             children: <Widget>[
               Expanded(
